@@ -4,18 +4,24 @@ import express from "express";
 
 const router = express.Router();
 
-// const calculadoraController = new CalculadoraController(calculadoraService);
+router.get("/calcular-dividendos", (req, res) => {
+  res.render("index", { resultado: null, erros: null });
+});
 
 router.post("/calcular-dividendos", async (req, res) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3000/calcular-dividendos",
-      req.body
-    );
-    res.send(response.data);
+    const {
+      data: { resultado },
+    } = await axios.post("http://localhost:3000/calcular-dividendos", req.body);
+
+    res.render("index", { resultado, erros: null });
   } catch (error) {
-    console.log(error);
-    res.send(error);
+    const {
+      response: {
+        data: { erros },
+      },
+    } = error;
+    res.render("index", { resultado: null, erros });
   }
 });
 
