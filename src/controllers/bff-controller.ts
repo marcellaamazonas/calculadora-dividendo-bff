@@ -4,20 +4,14 @@ import { Request, Response } from "express";
 export class BffController {
   public async calcularDividendos(req: Request, res: Response) {
     try {
-      const {
-        data: { resultado },
-      } = await axios.post(
-        "http://localhost:3000/calcular-dividendos",
+      const response = await axios.post(
+        `${process.env.API_BASE_URL}/calcular-dividendos`,
         req.body
       );
 
-      res.render("index", { resultado, erros: null });
+      res.render("index", { resultado: response.data.resultado, erros: null });
     } catch (error) {
-      const {
-        response: {
-          data: { erros },
-        },
-      } = error;
+      const { erros } = error.response.data;
       res.render("index", { resultado: null, erros });
     }
   }
